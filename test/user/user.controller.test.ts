@@ -1,11 +1,11 @@
 import { INestApplication } from '@nestjs/common';
+import { hash } from 'argon2';
 import { Knex } from 'knex';
 import * as request from 'supertest';
 import { initialize } from '@src/initialize';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
 import { userFactory } from '@test/factories/user.factory';
 import { tokenFactory } from '@test/factories/token.factory';
-import { hash } from 'argon2';
 
 describe('UserController', () => {
   let app: INestApplication;
@@ -48,10 +48,10 @@ describe('UserController', () => {
     await app.close();
   });
 
-  describe('GET /api/user/:id', () => {
+  describe('GET /api/users/:id', () => {
     it('should return the user', async () => {
       const response = await request(app.getHttpServer()).get(
-        `/api/user/${user.id}`
+        `/api/users/${user.id}`
       );
 
       expect(response.body.user).toMatchObject({
@@ -62,7 +62,7 @@ describe('UserController', () => {
     });
   });
 
-  describe('PATCH /api/user/:id', () => {
+  describe('PATCH /api/users/:id', () => {
     it('should return the updated user', async () => {
       const updateUserData = {
         email: 'new@email.com',
@@ -70,7 +70,7 @@ describe('UserController', () => {
       };
 
       const response = await request(app.getHttpServer())
-        .patch(`/api/user/${user.id}`)
+        .patch(`/api/users/${user.id}`)
         .send(updateUserData)
         .set('authorization', tokens[0].value);
 
@@ -83,7 +83,7 @@ describe('UserController', () => {
 
     it('should apply guard', async () => {
       const response = await request(app.getHttpServer())
-        .patch(`/api/user/${user.id}`)
+        .patch(`/api/users/${user.id}`)
         .send({
           username: 'newusername',
           currentPassword: user.password,
@@ -94,10 +94,10 @@ describe('UserController', () => {
     });
   });
 
-  describe('DELETE /api/user/:id', () => {
+  describe('DELETE /api/users/:id', () => {
     it('should delete the user', async () => {
       const response = await request(app.getHttpServer())
-        .delete(`/api/user/${user.id}`)
+        .delete(`/api/users/${user.id}`)
         .set('authorization', tokens[0].value);
 
       expect(response.statusCode).toBe(204);
@@ -105,7 +105,7 @@ describe('UserController', () => {
 
     it('should apply guard', async () => {
       const response = await request(app.getHttpServer())
-        .delete(`/api/user/${user.id}`)
+        .delete(`/api/users/${user.id}`)
         .set('authorization', tokens2[0].value);
 
       expect(response.forbidden).toBe(true);
