@@ -18,6 +18,13 @@ import { UserGuard } from '@src/user/guards/user.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get(':id/feed')
+  @UseGuards(AuthGuard, UserGuard)
+  async feed(@Param('id') id: string) {
+    const feed = await this.userService.getFeed(id);
+    return { feed };
+  }
+
   @Get(':id')
   async show(@Param('id') id: string) {
     const user = await this.userService.findOne({ id });

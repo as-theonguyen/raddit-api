@@ -9,7 +9,7 @@ import { tokenFactory } from '@test/factories/token.factory';
 import { postFactory } from '@test/factories/post.factory';
 import { commentFactory } from '@test/factories/comment.factory';
 
-describe('PostController', () => {
+describe('CommentController', () => {
   let app: INestApplication;
   let knex: Knex;
 

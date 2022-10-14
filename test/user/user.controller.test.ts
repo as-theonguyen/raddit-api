@@ -6,6 +6,8 @@ import { initialize } from '@src/initialize';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
 import { userFactory } from '@test/factories/user.factory';
 import { tokenFactory } from '@test/factories/token.factory';
+import { postFactory } from '@test/factories/post.factory';
+import { followFactory } from '@test/factories/follow.factory';
 
 describe('UserController', () => {
   let app: INestApplication;
@@ -21,6 +23,11 @@ describe('UserController', () => {
   const tokens2 = tokenFactory
     .params({ context: 'access', userId: user2.id })
     .buildList(4);
+
+  const posts = postFactory.params({ userId: user.id }).buildList(4);
+  const follow = followFactory
+    .params({ followerId: user2.id, followeeId: user.id })
+    .build();
 
   beforeAll(async () => {
     app = await initialize({ logger: false });
@@ -39,6 +46,10 @@ describe('UserController', () => {
 
     await knex('user_tokens').insert([...tokens, ...tokens2]);
 
+    await knex('posts').insert(posts);
+
+    await knex('follows').insert(follow);
+
     await app.init();
   });
 
@@ -46,6 +57,31 @@ describe('UserController', () => {
     await knex('users').delete();
     await knex.destroy();
     await app.close();
+  });
+
+  describe('GET /api/users/:id/feed', () => {
+    it('should return the user feed', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/users/${user2.id}/feed`)
+        .set('authorization', tokens2[0].value);
+
+      const postShapes = posts.map(({ userId, ...p }) => ({
+        ...p,
+        user: {
+          username: user.username,
+        },
+      }));
+
+      expect(response.body.feed).toMatchObject(postShapes);
+    });
+
+    it('should apply guard', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/users/${user2.id}/feed`)
+        .set('authorization', tokens[0].value);
+
+      expect(response.forbidden).toBe(true);
+    });
   });
 
   describe('GET /api/users/:id', () => {

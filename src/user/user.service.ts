@@ -14,6 +14,23 @@ import { UpdateUserDTO } from '@src/user/dto/update-user.dto';
 export class UserService {
   constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
+  async getFeed(id: string) {
+    const posts = await this.knex
+      .select('p.id', 'p.title', 'p.content', 'p.createdAt', 'u.username')
+      .from('posts as p')
+      .join('users as u', 'u.id', '=', 'p.userId')
+      .join('follows as f', 'u.id', '=', 'f.followeeId')
+      .where('f.followerId', '=', id)
+      .orderBy('p.createdAt', 'desc');
+
+    return posts.map(({ username, ...p }) => ({
+      ...p,
+      user: {
+        username,
+      },
+    }));
+  }
+
   async findOne(query: FindOneDTO) {
     const [user] = await this.knex('users').select('*').where(query);
 

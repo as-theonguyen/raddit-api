@@ -7,18 +7,29 @@ import { tokenFactory } from '@test/factories/token.factory';
 import { userFactory } from '@test/factories/user.factory';
 import { KnexModule, KNEX_CONNECTION } from '@src/knex/knex.module';
 import knexConfig from '@src/config/knexfile';
+import { postFactory } from '@test/factories/post.factory';
+import { followFactory } from '@test/factories/follow.factory';
 
 describe('UserService', () => {
   let userService: UserService;
   let knex: Knex;
 
   const user = userFactory.build();
+
+  const followee = userFactory.build();
+
   const tokens = tokenFactory
     .params({
       context: 'access',
       userId: user.id,
     })
     .buildList(4);
+
+  const posts = postFactory.params({ userId: followee.id }).buildList(3);
+
+  const follow = followFactory
+    .params({ followeeId: followee.id, followerId: user.id })
+    .build();
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -29,16 +40,39 @@ describe('UserService', () => {
     userService = module.get(UserService);
     knex = module.get(KNEX_CONNECTION);
 
-    await knex('users').insert({
-      ...user,
-      password: await hash(user.password),
-    });
+    await knex('users').insert([
+      {
+        ...user,
+        password: await hash(user.password),
+      },
+      followee,
+    ]);
+
     await knex('user_tokens').insert(tokens);
+
+    await knex('posts').insert(posts);
+
+    await knex('follows').insert(follow);
   });
 
   afterAll(async () => {
     await knex('users').delete();
     await knex.destroy();
+  });
+
+  describe('getFeed', () => {
+    it("should return all the posts that belong the user's followees", async () => {
+      const result = await userService.getFeed(user.id);
+
+      const postShapes = posts.map(({ userId, ...p }) => ({
+        ...p,
+        user: {
+          username: followee.username,
+        },
+      }));
+
+      expect(result).toMatchObject(postShapes);
+    });
   });
 
   describe('findOne', () => {
