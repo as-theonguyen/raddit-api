@@ -7,7 +7,6 @@ import {
 import { hash, verify } from 'argon2';
 import { Knex } from 'knex';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
-import { FindOneDTO } from '@src/user/dto/find-one-user.dto';
 import { UpdateUserDTO } from '@src/user/dto/update-user.dto';
 
 @Injectable()
@@ -31,14 +30,34 @@ export class UserService {
     }));
   }
 
-  async findOne(query: FindOneDTO) {
-    const [user] = await this.knex('users').select('*').where(query);
+  async findOne(id: string) {
+    const result = await this.knex.transaction(async (trx) => {
+      try {
+        const [user] = await trx('users').select('*').where('id', '=', id);
 
-    if (!user) {
-      return null;
-    }
+        if (!user) {
+          throw new NotFoundException();
+        }
 
-    return user;
+        const [followerCount] = await trx('follows')
+          .count('* as count')
+          .where('followeeId', '=', user.id);
+
+        const [followeeCount] = await trx('follows')
+          .count('* as count')
+          .where('followerId', '=', user.id);
+
+        await trx.commit([user, followerCount, followeeCount]);
+      } catch (error) {
+        await trx.rollback(error);
+      }
+    });
+
+    return {
+      user: result[0],
+      followerCount: +result[1].count,
+      followeeCount: +result[2].count,
+    };
   }
 
   async findByToken(token: string, context: string = 'access') {

@@ -8,6 +8,10 @@ import { FollowDTO } from '@src/follow/dto/follow.dto';
 export class FollowService {
   constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
+  async getFollowers(id: string) {}
+
+  async getFollowees(id: string) {}
+
   async follow({ followeeId, followerId }: FollowDTO) {
     const id = v4();
 

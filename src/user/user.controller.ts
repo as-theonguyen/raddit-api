@@ -27,8 +27,8 @@ export class UserController {
 
   @Get(':id')
   async show(@Param('id') id: string) {
-    const user = await this.userService.findOne({ id });
-    return { user };
+    const user = await this.userService.findOne(id);
+    return user;
   }
 
   @Patch(':id')

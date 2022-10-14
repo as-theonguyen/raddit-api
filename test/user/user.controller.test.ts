@@ -90,10 +90,14 @@ describe('UserController', () => {
         `/api/users/${user.id}`
       );
 
-      expect(response.body.user).toMatchObject({
-        id: user.id,
-        email: user.email,
-        username: user.username,
+      expect(response.body).toMatchObject({
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        },
+        followerCount: 1,
+        followeeCount: 0,
       });
     });
   });

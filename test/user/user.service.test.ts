@@ -77,24 +77,32 @@ describe('UserService', () => {
 
   describe('findOne', () => {
     it('should find and return the user by the given params', async () => {
-      const result = await userService.findOne({
-        email: user.email,
-        username: user.username,
+      const followerResult = await userService.findOne(user.id);
+      const followeeResult = await userService.findOne(followee.id);
+
+      expect(followerResult).toMatchObject({
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        },
+        followerCount: 0,
+        followeeCount: 1,
       });
 
-      expect(result).toMatchObject({
-        id: user.id,
-        email: user.email,
-        username: user.username,
+      expect(followeeResult).toMatchObject({
+        user: {
+          id: followee.id,
+          email: followee.email,
+          username: followee.username,
+        },
+        followerCount: 1,
+        followeeCount: 0,
       });
     });
 
     it('should return null if the was no user found', async () => {
-      const result = await userService.findOne({
-        id: v4(),
-      });
-
-      expect(result).toBeNull();
+      await expect(userService.findOne(v4())).rejects.toThrow();
     });
   });
 
