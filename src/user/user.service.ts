@@ -33,7 +33,9 @@ export class UserService {
   async findOne(id: string) {
     const result = await this.knex.transaction(async (trx) => {
       try {
-        const [user] = await trx('users').select('*').where('id', '=', id);
+        const [user] = await trx('users')
+          .select(['id', 'username', 'email'])
+          .where('id', '=', id);
 
         if (!user) {
           throw new NotFoundException();
@@ -102,7 +104,7 @@ export class UserService {
             password: newPassword,
           })
           .where('id', '=', id)
-          .returning('*');
+          .returning(['id', 'email', 'username']);
 
         await trx.commit([updatedUser]);
       } catch (error) {

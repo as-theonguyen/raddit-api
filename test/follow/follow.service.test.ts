@@ -47,6 +47,26 @@ describe('FollowService', () => {
     });
   });
 
+  describe('getFollowers', () => {
+    it('should return all followers', async () => {
+      const followers = await followService.getFollowers(followee.id);
+      expect(followers).toMatchObject([follower]);
+
+      const noFollowers = await followService.getFollowers(follower.id);
+      expect(noFollowers).toEqual([]);
+    });
+  });
+
+  describe('getFollowees', () => {
+    it('should return all followees', async () => {
+      const followees = await followService.getFollowees(follower.id);
+      expect(followees).toMatchObject([followee]);
+
+      const noFollowees = await followService.getFollowees(followee.id);
+      expect(noFollowees).toEqual([]);
+    });
+  });
+
   describe('unfollow', () => {
     it('should delete the entry from the database', async () => {
       const result = await followService.unfollow({

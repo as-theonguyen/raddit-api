@@ -84,6 +84,48 @@ describe('UserController', () => {
     });
   });
 
+  describe('GET /api/users/:id/followers', () => {
+    it('should return all followers', async () => {
+      const response = await request(app.getHttpServer()).get(
+        `/api/users/${user.id}/followers`
+      );
+
+      const noFollowerResponse = await request(app.getHttpServer()).get(
+        `/api/users/${user2.id}/followers`
+      );
+
+      expect(response.body.followers).toMatchObject([
+        {
+          id: user2.id,
+          email: user2.email,
+          username: user2.username,
+        },
+      ]);
+      expect(noFollowerResponse.body.followers).toMatchObject([]);
+    });
+  });
+
+  describe('GET /api/users/:id/followees', () => {
+    it('should return all followees', async () => {
+      const response = await request(app.getHttpServer()).get(
+        `/api/users/${user2.id}/followees`
+      );
+
+      const noFolloweeResponse = await request(app.getHttpServer()).get(
+        `/api/users/${user.id}/followees`
+      );
+
+      expect(response.body.followees).toMatchObject([
+        {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        },
+      ]);
+      expect(noFolloweeResponse.body.followees).toMatchObject([]);
+    });
+  });
+
   describe('GET /api/users/:id', () => {
     it('should return the user', async () => {
       const response = await request(app.getHttpServer()).get(

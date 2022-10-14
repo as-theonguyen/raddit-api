@@ -8,9 +8,25 @@ import { FollowDTO } from '@src/follow/dto/follow.dto';
 export class FollowService {
   constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
-  async getFollowers(id: string) {}
+  async getFollowers(id: string) {
+    const followers = await this.knex
+      .select(['u.id', 'u.email', 'u.username'])
+      .from('users as u')
+      .join('follows as f', 'u.id', '=', 'f.followerId')
+      .where('f.followeeId', '=', id);
 
-  async getFollowees(id: string) {}
+    return followers;
+  }
+
+  async getFollowees(id: string) {
+    const followees = await this.knex
+      .select(['u.id', 'u.email', 'u.username'])
+      .from('users as u')
+      .join('follows as f', 'u.id', '=', 'f.followeeId')
+      .where('f.followerId', '=', id);
+
+    return followees;
+  }
 
   async follow({ followeeId, followerId }: FollowDTO) {
     const id = v4();
