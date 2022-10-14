@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { Knex } from 'knex';
 import { faker } from '@faker-js/faker';
+import { v4 } from 'uuid';
 import { KnexModule, KNEX_CONNECTION } from '@src/knex/knex.module';
 import knexConfig from '@src/config/knexfile';
 import { userFactory } from '@test/factories/user.factory';
@@ -53,6 +54,18 @@ describe('CommentService', () => {
     });
   });
 
+  describe('findOne', () => {
+    it('should find and return the comment by id', async () => {
+      const result = await commentService.findOne(comments[0].id);
+      expect(result).toMatchObject(comments[0]);
+    });
+
+    it('should return null if no comment was found', async () => {
+      const result = await commentService.findOne(v4());
+      expect(result).toBeNull();
+    });
+  });
+
   describe('create', () => {
     it('should create and return the comment', async () => {
       const createCommentData = {
@@ -73,7 +86,8 @@ describe('CommentService', () => {
 
       const [commentInDb] = await knex('comments')
         .select('*')
-        .where('id', '=', result.id);
+        .where('id', '=', result.id)
+        .andWhere('postId', '=', post.id);
 
       expect(commentInDb).toMatchObject(result);
     });

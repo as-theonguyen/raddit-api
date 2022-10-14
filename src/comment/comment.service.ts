@@ -17,6 +17,18 @@ export class CommentService {
     return comments;
   }
 
+  async findOne(id: string) {
+    const [comment] = await this.knex('comments')
+      .select('*')
+      .where('id', '=', id);
+
+    if (!comment) {
+      return null;
+    }
+
+    return comment;
+  }
+
   async create(userId: string, postId: string, input: CreateCommentDTO) {
     const id = v4();
 
