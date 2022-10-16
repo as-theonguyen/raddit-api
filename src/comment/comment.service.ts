@@ -14,7 +14,8 @@ export class CommentService {
       .select(['c.id', 'c.content', 'u.id as uid', 'u.username'])
       .from('comments as c')
       .join('users as u', 'u.id', '=', 'c.userId')
-      .where('c.postId', '=', postId);
+      .where('c.postId', '=', postId)
+      .orderBy('c.createdAt', 'desc');
 
     return comments.map((c) => ({
       id: c.id,
