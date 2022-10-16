@@ -22,7 +22,7 @@ export class PostCommentController {
   @Get('')
   async index(@Param('postId') postId: string) {
     const comments = await this.commentService.findAllCommentsByPost(postId);
-    return { comments };
+    return { data: comments };
   }
 
   @Post('')
@@ -38,7 +38,7 @@ export class PostCommentController {
       input
     );
 
-    return { comment };
+    return { data: comment };
   }
 }
 

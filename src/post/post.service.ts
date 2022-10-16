@@ -10,18 +10,41 @@ export class PostService {
   constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
   async findOne(id: string) {
-    const [post] = await this.knex('posts').select('*').where('id', '=', id);
+    const [post] = await this.knex
+      .select([
+        'p.id',
+        'p.title',
+        'p.content',
+        'p.createdAt',
+        'u.id as uid',
+        'u.username',
+      ])
+      .from('posts as p')
+      .join('users as u', 'u.id', '=', 'p.userId')
+      .where('p.id', '=', id);
 
     if (!post) {
       return null;
     }
 
-    return post;
+    return this.formatPost(post);
   }
 
   async findAll() {
-    const posts = await this.knex('posts').select('*');
-    return posts;
+    const posts = await this.knex
+      .select([
+        'p.id',
+        'p.title',
+        'p.content',
+        'p.createdAt',
+        'u.id as uid',
+        'u.username',
+      ])
+      .from('posts as p')
+      .join('users as u', 'u.id', '=', 'p.userId')
+      .orderBy('createdAt', 'desc');
+
+    return posts.map((p) => this.formatPost(p));
   }
 
   async create(userId: string, input: CreatePostDTO) {
@@ -55,5 +78,15 @@ export class PostService {
     } catch (error) {
       return false;
     }
+  }
+
+  private formatPost({ username, uid, ...post }) {
+    return {
+      ...post,
+      user: {
+        id: uid,
+        username,
+      },
+    };
   }
 }

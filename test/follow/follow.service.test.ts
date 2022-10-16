@@ -50,7 +50,13 @@ describe('FollowService', () => {
   describe('getFollowers', () => {
     it('should return all followers', async () => {
       const followers = await followService.getFollowers(followee.id);
-      expect(followers).toMatchObject([follower]);
+      expect(followers).toMatchObject([
+        {
+          id: follower.id,
+          email: follower.email,
+          username: follower.username,
+        },
+      ]);
 
       const noFollowers = await followService.getFollowers(follower.id);
       expect(noFollowers).toEqual([]);
@@ -60,7 +66,13 @@ describe('FollowService', () => {
   describe('getFollowees', () => {
     it('should return all followees', async () => {
       const followees = await followService.getFollowees(follower.id);
-      expect(followees).toMatchObject([followee]);
+      expect(followees).toMatchObject([
+        {
+          id: followee.id,
+          email: followee.email,
+          username: followee.username,
+        },
+      ]);
 
       const noFollowees = await followService.getFollowees(followee.id);
       expect(noFollowees).toEqual([]);

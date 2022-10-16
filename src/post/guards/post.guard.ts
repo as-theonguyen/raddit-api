@@ -21,6 +21,6 @@ export class PostGuard implements CanActivate {
       throw new NotFoundException();
     }
 
-    return post.userId === request.user.id;
+    return post.user.id === request.user.id;
   }
 }

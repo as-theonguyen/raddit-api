@@ -24,13 +24,13 @@ export class PostController {
   @Get('')
   async index() {
     const posts = await this.postService.findAll();
-    return { posts };
+    return { data: posts };
   }
 
   @Get(':id')
   async show(@Param('id') id: string) {
     const post = await this.postService.findOne(id);
-    return { post };
+    return { data: post };
   }
 
   @Post('')
@@ -42,14 +42,14 @@ export class PostController {
   ) {
     const createdPost = await this.postService.create(req.user!.id, input);
     res.statusCode = 201;
-    return { post: createdPost };
+    return { data: createdPost };
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard, PostGuard)
   async update(@Param('id') id: string, @Body() input: UpdatePostDTO) {
     const updatedPost = await this.postService.updateOne(id, input);
-    return { post: updatedPost };
+    return { data: updatedPost };
   }
 
   @Delete(':id')

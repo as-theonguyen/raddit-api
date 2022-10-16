@@ -42,7 +42,16 @@ describe('PostService', () => {
   describe('findOne', () => {
     it('should find and return the post by id', async () => {
       const result = await postService.findOne(posts[0].id);
-      expect(result).toMatchObject(posts[0]);
+
+      expect(result).toMatchObject({
+        id: posts[0].id,
+        title: posts[0].title,
+        content: posts[0].content,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+      });
     });
 
     it('should return null if no post was found', async () => {
@@ -54,7 +63,18 @@ describe('PostService', () => {
   describe('findAll', () => {
     it('should return all posts in the database', async () => {
       const result = await postService.findAll();
-      expect(result).toMatchObject(posts);
+
+      const postShapes = posts.map((p) => ({
+        id: p.id,
+        title: p.title,
+        content: p.content,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+      }));
+
+      expect(result.sort()).toMatchObject(postShapes.sort());
     });
   });
 

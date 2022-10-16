@@ -50,7 +50,17 @@ describe('CommentService', () => {
   describe('findAllCommentsByPost', () => {
     it('should find and return all comments belong to the post', async () => {
       const result = await commentService.findAllCommentsByPost(post.id);
-      expect(result).toMatchObject(comments);
+
+      const commentShapes = comments.map((c) => ({
+        id: c.id,
+        content: c.content,
+        user: {
+          id: commenter.id,
+          username: commenter.username,
+        },
+      }));
+
+      expect(result.sort()).toMatchObject(commentShapes.sort());
     });
   });
 
@@ -79,9 +89,11 @@ describe('CommentService', () => {
       );
 
       expect(result).toMatchObject({
-        userId: commenter.id,
-        postId: post.id,
         content: createCommentData.content,
+        user: {
+          id: commenter.id,
+          username: commenter.username,
+        },
       });
 
       const [commentInDb] = await knex('comments')
@@ -89,7 +101,12 @@ describe('CommentService', () => {
         .where('id', '=', result.id)
         .andWhere('postId', '=', post.id);
 
-      expect(commentInDb).toMatchObject(result);
+      expect(commentInDb).toMatchObject({
+        id: result.id,
+        content: createCommentData.content,
+        userId: commenter.id,
+        postId: post.id,
+      });
     });
   });
 

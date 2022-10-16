@@ -139,7 +139,7 @@ describe('UserService', () => {
       const match = await verify(userInDb.password, 'newpassword');
 
       expect(match).toBe(true);
-      expect(result).toEqual(userInDb);
+      expect(userInDb).toMatchObject(result);
     });
 
     it('should check the current password', async () => {

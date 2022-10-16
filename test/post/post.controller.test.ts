@@ -48,7 +48,17 @@ describe('PostController', () => {
     it('should return all posts', async () => {
       const response = await request(app.getHttpServer()).get('/api/posts');
 
-      expect(response.body.posts).toMatchObject(posts);
+      const postShapes = posts.map((p) => ({
+        id: p.id,
+        title: p.title,
+        content: p.content,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+      }));
+
+      expect(response.body.data.sort()).toMatchObject(postShapes.sort());
     });
   });
 
@@ -58,7 +68,15 @@ describe('PostController', () => {
         `/api/posts/${posts[0].id}`
       );
 
-      expect(response.body.post).toMatchObject(posts[0]);
+      expect(response.body.data).toMatchObject({
+        id: posts[0].id,
+        title: posts[0].title,
+        content: posts[0].content,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+      });
     });
   });
 
@@ -74,7 +92,7 @@ describe('PostController', () => {
         .send(createPostData)
         .set('authorization', tokens2[0].value);
 
-      expect(response.body.post).toMatchObject(createPostData);
+      expect(response.body.data).toMatchObject(createPostData);
     });
 
     it('should apply guard', async () => {
@@ -102,7 +120,7 @@ describe('PostController', () => {
         .send(updatePostData)
         .set('authorization', tokens[0].value);
 
-      expect(response.body.post).toMatchObject({
+      expect(response.body.data).toMatchObject({
         id: posts[0].id,
         title: posts[0].title,
         content: 'newcontent',

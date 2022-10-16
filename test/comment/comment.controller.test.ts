@@ -57,7 +57,16 @@ describe('CommentController', () => {
         `/api/posts/${post.id}/comments`
       );
 
-      expect(response.body.comments).toMatchObject(comments);
+      const commentShapes = comments.map((c) => ({
+        id: c.id,
+        content: c.content,
+        user: {
+          id: commenter.id,
+          username: commenter.username,
+        },
+      }));
+
+      expect(response.body.data.sort()).toMatchObject(commentShapes.sort());
     });
   });
 
@@ -72,7 +81,13 @@ describe('CommentController', () => {
         .send(createCommentData)
         .set('authorization', commenterToken.value);
 
-      expect(response.body.comment).toMatchObject(createCommentData);
+      expect(response.body.data).toMatchObject({
+        content: createCommentData.content,
+        user: {
+          id: commenter.id,
+          username: commenter.username,
+        },
+      });
     });
 
     it('should apply guard', async () => {
