@@ -15,17 +15,27 @@ export class UserService {
 
   async getFeed(id: string) {
     const posts = await this.knex
-      .select('p.id', 'p.title', 'p.content', 'p.createdAt', 'u.username')
+      .select([
+        'p.id',
+        'p.title',
+        'p.content',
+        'p.createdAt',
+        'u.id as uid',
+        'u.username',
+      ])
       .from('posts as p')
       .join('users as u', 'u.id', '=', 'p.userId')
       .join('follows as f', 'u.id', '=', 'f.followeeId')
       .where('f.followerId', '=', id)
       .orderBy('p.createdAt', 'desc');
 
-    return posts.map(({ username, ...p }) => ({
-      ...p,
+    return posts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      content: p.content,
       user: {
-        username,
+        id: p.uid,
+        username: p.username,
       },
     }));
   }

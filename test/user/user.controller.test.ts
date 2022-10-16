@@ -68,11 +68,12 @@ describe('UserController', () => {
       const postShapes = posts.map(({ userId, ...p }) => ({
         ...p,
         user: {
+          id: user.id,
           username: user.username,
         },
       }));
 
-      expect(response.body.feed).toMatchObject(postShapes);
+      expect(response.body.data).toMatchObject(postShapes);
     });
 
     it('should apply guard', async () => {
@@ -94,14 +95,14 @@ describe('UserController', () => {
         `/api/users/${user2.id}/followers`
       );
 
-      expect(response.body.followers).toMatchObject([
+      expect(response.body.data).toMatchObject([
         {
           id: user2.id,
           email: user2.email,
           username: user2.username,
         },
       ]);
-      expect(noFollowerResponse.body.followers).toMatchObject([]);
+      expect(noFollowerResponse.body.data).toMatchObject([]);
     });
   });
 
@@ -115,14 +116,14 @@ describe('UserController', () => {
         `/api/users/${user.id}/followees`
       );
 
-      expect(response.body.followees).toMatchObject([
+      expect(response.body.data).toMatchObject([
         {
           id: user.id,
           email: user.email,
           username: user.username,
         },
       ]);
-      expect(noFolloweeResponse.body.followees).toMatchObject([]);
+      expect(noFolloweeResponse.body.data).toMatchObject([]);
     });
   });
 
@@ -132,7 +133,7 @@ describe('UserController', () => {
         `/api/users/${user.id}`
       );
 
-      expect(response.body).toMatchObject({
+      expect(response.body.data).toMatchObject({
         user: {
           id: user.id,
           email: user.email,
@@ -156,7 +157,7 @@ describe('UserController', () => {
         .send(updateUserData)
         .set('authorization', tokens[0].value);
 
-      expect(response.body.user).toMatchObject({
+      expect(response.body.data).toMatchObject({
         id: user.id,
         email: updateUserData.email,
         username: user.username,

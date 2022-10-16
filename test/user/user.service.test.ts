@@ -67,6 +67,7 @@ describe('UserService', () => {
       const postShapes = posts.map(({ userId, ...p }) => ({
         ...p,
         user: {
+          id: followee.id,
           username: followee.username,
         },
       }));

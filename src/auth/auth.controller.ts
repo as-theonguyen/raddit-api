@@ -25,7 +25,12 @@ export class AuthController {
   ) {
     const { user, accessToken } = await this.authService.register(input);
     res.statusCode = 201;
-    return { user, accessToken };
+    return {
+      data: {
+        user,
+        accessToken,
+      },
+    };
   }
 
   @Post('login')
@@ -35,7 +40,12 @@ export class AuthController {
   ) {
     const { user, accessToken } = await this.authService.login(input);
     res.statusCode = 201;
-    return { user, accessToken };
+    return {
+      data: {
+        user,
+        accessToken,
+      },
+    };
   }
 
   @Delete('logout')

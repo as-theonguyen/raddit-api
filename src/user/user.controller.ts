@@ -14,7 +14,6 @@ import { UpdateUserDTO } from '@src/user/dto/update-user.dto';
 import { AuthGuard } from '@src/auth/guards/auth.guard';
 import { UserGuard } from '@src/user/guards/user.guard';
 import { FollowService } from '@src/follow/follow.service';
-import { User } from '@src/user/types/user';
 
 @Controller('users')
 export class UserController {
@@ -27,32 +26,32 @@ export class UserController {
   @UseGuards(AuthGuard, UserGuard)
   async feed(@Param('id') id: string) {
     const feed = await this.userService.getFeed(id);
-    return { feed };
+    return { data: feed };
   }
 
   @Get(':id/followers')
   async getFollowers(@Param('id') id: string) {
     const followers = await this.followService.getFollowers(id);
-    return { followers };
+    return { data: followers };
   }
 
   @Get(':id/followees')
   async getFollowees(@Param('id') id: string) {
     const followees = await this.followService.getFollowees(id);
-    return { followees };
+    return { data: followees };
   }
 
   @Get(':id')
   async show(@Param('id') id: string) {
     const user = await this.userService.findOne(id);
-    return user;
+    return { data: user };
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard, UserGuard)
   async update(@Param('id') id: string, @Body() input: UpdateUserDTO) {
     const updatedUser = await this.userService.updateOne(id, input);
-    return { user: updatedUser };
+    return { data: updatedUser };
   }
 
   @Delete(':id')

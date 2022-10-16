@@ -46,12 +46,14 @@ describe('AuthController', () => {
 
       expect(response.statusCode).toBe(201);
 
-      expect(response.body.user).toMatchObject({
-        email: registerData.email,
-        username: registerData.username,
+      expect(response.body.data).toMatchObject({
+        user: {
+          email: registerData.email,
+          username: registerData.username,
+        },
       });
 
-      expect(response.body.accessToken).toBeDefined();
+      expect(response.body.data.accessToken).toBeDefined();
     });
   });
 
@@ -66,12 +68,14 @@ describe('AuthController', () => {
 
       expect(response.statusCode).toBe(201);
 
-      expect(response.body.user).toMatchObject({
-        email: user.email,
-        username: user.username,
+      expect(response.body.data).toMatchObject({
+        user: {
+          email: user.email,
+          username: user.username,
+        },
       });
 
-      expect(response.body.accessToken).toBeDefined();
+      expect(response.body.data.accessToken).toBeDefined();
     });
   });
 
