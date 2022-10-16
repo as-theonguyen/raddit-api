@@ -74,7 +74,9 @@ describe('PostService', () => {
         },
       }));
 
-      expect(result.sort()).toMatchObject(postShapes.sort());
+      expect(result.sort((a, b) => a.id.localeCompare(b.id))).toMatchObject(
+        postShapes.sort((a, b) => a.id.localeCompare(b.id))
+      );
     });
   });
 

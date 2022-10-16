@@ -58,7 +58,9 @@ describe('PostController', () => {
         },
       }));
 
-      expect(response.body.data.sort()).toMatchObject(postShapes.sort());
+      expect(
+        response.body.data.sort((a, b) => a.id.localeCompare(b.id))
+      ).toMatchObject(postShapes.sort((a, b) => a.id.localeCompare(b.id)));
     });
   });
 

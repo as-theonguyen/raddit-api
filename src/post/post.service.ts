@@ -27,7 +27,16 @@ export class PostService {
       return null;
     }
 
-    return this.formatPost(post);
+    return {
+      id: post.id,
+      title: post.title,
+      content: post.content,
+      createdAt: post.createdAt,
+      user: {
+        id: post.uid,
+        username: post.username,
+      },
+    };
   }
 
   async findAll() {
@@ -44,7 +53,16 @@ export class PostService {
       .join('users as u', 'u.id', '=', 'p.userId')
       .orderBy('createdAt', 'desc');
 
-    return posts.map((p) => this.formatPost(p));
+    return posts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      content: p.content,
+      createdAt: p.createdAt,
+      user: {
+        id: p.uid,
+        username: p.username,
+      },
+    }));
   }
 
   async create(userId: string, input: CreatePostDTO) {
@@ -78,15 +96,5 @@ export class PostService {
     } catch (error) {
       return false;
     }
-  }
-
-  private formatPost({ username, uid, ...post }) {
-    return {
-      ...post,
-      user: {
-        id: uid,
-        username,
-      },
-    };
   }
 }

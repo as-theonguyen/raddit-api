@@ -60,7 +60,9 @@ describe('CommentService', () => {
         },
       }));
 
-      expect(result.sort()).toMatchObject(commentShapes.sort());
+      expect(result.sort((a, b) => a.id.localeCompare(b.id))).toMatchObject(
+        commentShapes.sort((a, b) => a.id.localeCompare(b.id))
+      );
     });
   });
 

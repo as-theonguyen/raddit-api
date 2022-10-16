@@ -66,7 +66,9 @@ describe('CommentController', () => {
         },
       }));
 
-      expect(response.body.data.sort()).toMatchObject(commentShapes.sort());
+      expect(
+        response.body.data.sort((a, b) => a.id.localeCompare(b.id))
+      ).toMatchObject(commentShapes.sort((a, b) => a.id.localeCompare(b.id)));
     });
   });
 
