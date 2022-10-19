@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import {
   Body,
   Controller,
@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Patch,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -21,6 +22,14 @@ export class UserController {
     private readonly userService: UserService,
     private readonly followService: FollowService
   ) {}
+
+  @Get('me')
+  @UseGuards(AuthGuard)
+  async me(@Req() req: Request) {
+    return {
+      data: req.user,
+    };
+  }
 
   @Get(':id/feed')
   @UseGuards(AuthGuard, UserGuard)

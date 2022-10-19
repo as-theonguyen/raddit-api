@@ -59,6 +59,26 @@ describe('UserController', () => {
     await app.close();
   });
 
+  describe('GET /api/users/me', () => {
+    it('should return the current user', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/users/me')
+        .set('authorization', tokens[0].value);
+
+      expect(response.body.data).toMatchObject({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      });
+    });
+
+    it('should apply guard', async () => {
+      const response = await request(app.getHttpServer()).get('/api/users/me');
+
+      expect(response.unauthorized).toBe(true);
+    });
+  });
+
   describe('GET /api/users/:id/feed', () => {
     it('should return the user feed', async () => {
       const response = await request(app.getHttpServer())
