@@ -72,10 +72,10 @@ describe('UserController', () => {
       });
     });
 
-    it('should apply guard', async () => {
+    it('should return null if no user was found', async () => {
       const response = await request(app.getHttpServer()).get('/api/users/me');
 
-      expect(response.unauthorized).toBe(true);
+      expect(response.body.data).toBe(null);
     });
   });
 

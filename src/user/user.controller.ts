@@ -24,7 +24,6 @@ export class UserController {
   ) {}
 
   @Get('me')
-  @UseGuards(AuthGuard)
   async me(@Req() req: Request) {
     return {
       data: req.user,
