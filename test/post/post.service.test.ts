@@ -5,8 +5,8 @@ import { faker } from '@faker-js/faker';
 import { PostService } from '@src/post/post.service';
 import { KnexModule, KNEX_CONNECTION } from '@src/knex/knex.module';
 import knexConfig from '@src/config/knexfile';
-import { userFactory } from '@test/factories/user.factory';
-import { postFactory } from '@test/factories/post.factory';
+import { userFactory } from '@src/util/factories/user.factory';
+import { postFactory } from '@src/util/factories/post.factory';
 
 describe('PostService', () => {
   let postService: PostService;

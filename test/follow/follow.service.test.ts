@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 import { FollowService } from '@src/follow/follow.service';
 import { KnexModule, KNEX_CONNECTION } from '@src/knex/knex.module';
 import knexConfig from '@src/config/knexfile';
-import { userFactory } from '@test/factories/user.factory';
+import { userFactory } from '@src/util/factories/user.factory';
 
 describe('FollowService', () => {
   let followService: FollowService;

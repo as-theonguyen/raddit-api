@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { Knex } from 'knex';
 import { hash } from 'argon2';
-import { tokenFactory } from '@test/factories/token.factory';
-import { userFactory } from '@test/factories/user.factory';
+import { tokenFactory } from '@src/util/factories/token.factory';
+import { userFactory } from '@src/util/factories/user.factory';
 import { KnexModule, KNEX_CONNECTION } from '@src/knex/knex.module';
 import knexConfig from '@src/config/knexfile';
 import { AuthService } from '@src/auth/auth.service';

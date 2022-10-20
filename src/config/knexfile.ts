@@ -19,6 +19,9 @@ const knexConfig: { [key: string]: Knex.Config } = {
       tableName: 'knex_migrations',
       directory: join(__dirname, '..', 'db', 'migrations'),
     },
+    seeds: {
+      directory: join(__dirname, '..', 'db', 'seeds'),
+    },
   },
 
   test: {

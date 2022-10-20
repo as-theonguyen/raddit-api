@@ -3,9 +3,9 @@ import { Knex } from 'knex';
 import * as request from 'supertest';
 import { initialize } from '@src/initialize';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
-import { userFactory } from '@test/factories/user.factory';
-import { tokenFactory } from '@test/factories/token.factory';
-import { postFactory } from '@test/factories/post.factory';
+import { userFactory } from '@src/util/factories/user.factory';
+import { tokenFactory } from '@src/util/factories/token.factory';
+import { postFactory } from '@src/util/factories/post.factory';
 import { faker } from '@faker-js/faker';
 
 describe('PostController', () => {

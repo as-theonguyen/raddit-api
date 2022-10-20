@@ -4,9 +4,9 @@ import { faker } from '@faker-js/faker';
 import { v4 } from 'uuid';
 import { KnexModule, KNEX_CONNECTION } from '@src/knex/knex.module';
 import knexConfig from '@src/config/knexfile';
-import { userFactory } from '@test/factories/user.factory';
-import { postFactory } from '@test/factories/post.factory';
-import { commentFactory } from '@test/factories/comment.factory';
+import { userFactory } from '@src/util/factories/user.factory';
+import { postFactory } from '@src/util/factories/post.factory';
+import { commentFactory } from '@src/util/factories/comment.factory';
 import { CommentService } from '@src/comment/comment.service';
 
 describe('CommentService', () => {

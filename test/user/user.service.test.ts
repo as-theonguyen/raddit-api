@@ -3,12 +3,12 @@ import { Knex } from 'knex';
 import { v4 } from 'uuid';
 import { hash, verify } from 'argon2';
 import { UserService } from '@src/user/user.service';
-import { tokenFactory } from '@test/factories/token.factory';
-import { userFactory } from '@test/factories/user.factory';
+import { tokenFactory } from '@src/util/factories/token.factory';
+import { userFactory } from '@src/util/factories/user.factory';
 import { KnexModule, KNEX_CONNECTION } from '@src/knex/knex.module';
 import knexConfig from '@src/config/knexfile';
-import { postFactory } from '@test/factories/post.factory';
-import { followFactory } from '@test/factories/follow.factory';
+import { postFactory } from '@src/util/factories/post.factory';
+import { followFactory } from '@src/util/factories/follow.factory';
 
 describe('UserService', () => {
   let userService: UserService;

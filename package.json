@@ -10,6 +10,7 @@
     "db:migrate:test": "npx knex migrate:latest --env=test --knexfile=src/config/knexfile.ts",
     "db:migrate:local": "npm run db:migrate:dev && npm run db:migrate:test",
     "db:migrate:prod": "npx knex migrate:latest --env=production --knexfile=src/config/knexfile.ts",
+    "db:seed": "npx knex seed:run --env=development --knexfile=src/config/knexfile.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "dev": "nest start --watch",
     "start": "node dist/main",
@@ -53,7 +54,7 @@
     "ts-jest": "28.0.8",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
-    "tsconfig-paths": "4.1.0",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.7.4"
   }
 }
