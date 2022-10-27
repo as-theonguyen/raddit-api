@@ -64,11 +64,8 @@ export class UserController {
 
   @Delete(':id')
   @UseGuards(AuthGuard, UserGuard)
-  async destroy(
-    @Res({ passthrough: true }) res: Response,
-    @Param('id') id: string
-  ) {
-    await this.userService.deleteOne(id);
-    res.statusCode = 204;
+  async destroy(@Param('id') id: string) {
+    const result = await this.userService.deleteOne(id);
+    return { success: result };
   }
 }

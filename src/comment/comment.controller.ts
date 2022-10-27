@@ -48,11 +48,8 @@ export class CommentController {
 
   @Delete(':id')
   @UseGuards(AuthGuard, CommentGuard)
-  async destroy(
-    @Res({ passthrough: true }) res: Response,
-    @Param('id') id: string
-  ) {
-    await this.commentService.deleteOne({ id });
-    res.statusCode = 204;
+  async destroy(@Param('id') id: string) {
+    const result = await this.commentService.deleteOne({ id });
+    return { success: result };
   }
 }

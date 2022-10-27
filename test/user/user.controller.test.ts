@@ -203,7 +203,7 @@ describe('UserController', () => {
         .delete(`/api/users/${user.id}`)
         .set('authorization', tokens[0].value);
 
-      expect(response.statusCode).toBe(204);
+      expect(response.body.success).toBe(true);
     });
 
     it('should apply guard', async () => {

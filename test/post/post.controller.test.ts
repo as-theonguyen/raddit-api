@@ -149,7 +149,7 @@ describe('PostController', () => {
         .delete(`/api/posts/${posts[2].id}`)
         .set('authorization', tokens[1].value);
 
-      expect(response.noContent).toBe(true);
+      expect(response.body.success).toBe(true);
     });
 
     it('should apply guard', async () => {

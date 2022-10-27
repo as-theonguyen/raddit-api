@@ -54,11 +54,8 @@ export class PostController {
 
   @Delete(':id')
   @UseGuards(AuthGuard, PostGuard)
-  async destroy(
-    @Res({ passthrough: true }) res: Response,
-    @Param('id') id: string
-  ) {
-    await this.postService.deleteOne(id);
-    res.statusCode = 204;
+  async destroy(@Param('id') id: string) {
+    const result = await this.postService.deleteOne(id);
+    return { success: result };
   }
 }

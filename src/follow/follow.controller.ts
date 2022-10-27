@@ -35,16 +35,12 @@ export class FollowController {
 
   @Delete(':followeeId')
   @UseGuards(AuthGuard)
-  async destroy(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-    @Param('followeeId') followeeId: string
-  ) {
-    await this.followService.unfollow({
+  async destroy(@Req() req: Request, @Param('followeeId') followeeId: string) {
+    const result = await this.followService.unfollow({
       followeeId,
       followerId: req.user!.id,
     });
 
-    res.statusCode = 204;
+    return { success: result };
   }
 }

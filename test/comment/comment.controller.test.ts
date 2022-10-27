@@ -111,7 +111,7 @@ describe('CommentController', () => {
         .delete(`/api/comments/${comments[0].id}`)
         .set('authorization', commenterToken.value);
 
-      expect(response.noContent).toBe(true);
+      expect(response.body.success).toBe(true);
     });
 
     it('should apply guard', async () => {
