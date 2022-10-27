@@ -40,11 +40,11 @@ export class FollowController {
     @Res({ passthrough: true }) res: Response,
     @Param('followeeId') followeeId: string
   ) {
-    const result = await this.followService.unfollow({
+    await this.followService.unfollow({
       followeeId,
       followerId: req.user!.id,
     });
 
-    return { success: result };
+    res.statusCode = 204;
   }
 }

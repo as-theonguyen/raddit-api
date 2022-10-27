@@ -52,7 +52,7 @@ export class CommentController {
     @Res({ passthrough: true }) res: Response,
     @Param('id') id: string
   ) {
-    const result = await this.commentService.deleteOne({ id });
-    return { success: result };
+    await this.commentService.deleteOne({ id });
+    res.statusCode = 204;
   }
 }
