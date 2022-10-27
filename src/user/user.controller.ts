@@ -68,7 +68,7 @@ export class UserController {
     @Res({ passthrough: true }) res: Response,
     @Param('id') id: string
   ) {
-    await this.userService.deleteOne(id);
-    res.statusCode = 204;
+    const result = await this.userService.deleteOne(id);
+    return { success: result };
   }
 }

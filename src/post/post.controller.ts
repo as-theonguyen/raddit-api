@@ -59,6 +59,6 @@ export class PostController {
     @Param('id') id: string
   ) {
     await this.postService.deleteOne(id);
-    res.statusCode = 204;
+    return { success: true };
   }
 }
