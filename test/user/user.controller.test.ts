@@ -93,7 +93,9 @@ describe('UserController', () => {
         },
       }));
 
-      expect(response.body.data).toMatchObject(postShapes);
+      expect(
+        response.body.data.sort((a, b) => a.id.localeCompare(b.id))
+      ).toMatchObject(postShapes.sort((a, b) => a.id.localeCompare(b.id)));
     });
 
     it('should apply guard', async () => {

@@ -27,6 +27,7 @@ export class UserService {
       .join('users as u', 'u.id', '=', 'p.userId')
       .join('follows as f', 'u.id', '=', 'f.followeeId')
       .where('f.followerId', '=', id)
+      .orWhere('p.userId', '=', id)
       .orderBy('p.createdAt', 'desc');
 
     return posts.map((p) => ({

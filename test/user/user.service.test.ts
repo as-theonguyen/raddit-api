@@ -72,7 +72,9 @@ describe('UserService', () => {
         },
       }));
 
-      expect(result).toMatchObject(postShapes);
+      expect(result.sort((a, b) => a.id.localeCompare(b.id))).toMatchObject(
+        postShapes.sort((a, b) => a.id.localeCompare(b.id))
+      );
     });
   });
 
