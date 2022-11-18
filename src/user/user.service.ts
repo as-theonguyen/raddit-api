@@ -8,12 +8,16 @@ import { hash, verify } from 'argon2';
 import { Knex } from 'knex';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
 import { UpdateUserDTO } from '@src/user/dto/update-user.dto';
+import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Injectable()
 export class UserService {
   constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
-  async getFeed(id: string) {
+  async getFeed(id: string, params?: PaginationQueryParams) {
+    const limit = params?.limit || 20;
+    const offset = params?.offset || 0;
+
     const posts = await this.knex
       .select([
         'p.id',
@@ -28,7 +32,9 @@ export class UserService {
       .join('follows as f', 'u.id', '=', 'f.followeeId')
       .where('f.followerId', '=', id)
       .orWhere('p.userId', '=', id)
-      .orderBy('p.createdAt', 'desc');
+      .orderBy('p.createdAt', 'desc')
+      .limit(limit)
+      .offset(offset);
 
     return posts.map((p) => ({
       id: p.id,

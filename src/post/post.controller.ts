@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -16,14 +17,15 @@ import { AuthGuard } from '@src/auth/guards/auth.guard';
 import { CreatePostDTO } from '@src/post/dto/create-post.dto';
 import { UpdatePostDTO } from '@src/post/dto/update-post.dto';
 import { PostGuard } from '@src/post/guards/post.guard';
+import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get('')
-  async index() {
-    const posts = await this.postService.findAll();
+  async index(@Query() queryParams?: PaginationQueryParams) {
+    const posts = await this.postService.findAll(queryParams);
     return { data: posts };
   }
 

@@ -1,6 +1,6 @@
 # Raddit API
 
-API for a social media application.
+API for a social blogging application.
 
 ## Tech
 
@@ -18,6 +18,10 @@ API for a social media application.
 - Comments
 - Follow/Unfollow
 - Personal feed
+
+## Database schema
+
+![database schema](./raddit-schema.png)
 
 ## Getting started
 

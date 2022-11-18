@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import {
   Body,
   Controller,
@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -15,6 +16,7 @@ import { UpdateUserDTO } from '@src/user/dto/update-user.dto';
 import { AuthGuard } from '@src/auth/guards/auth.guard';
 import { UserGuard } from '@src/user/guards/user.guard';
 import { FollowService } from '@src/follow/follow.service';
+import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Controller('users')
 export class UserController {
@@ -32,20 +34,29 @@ export class UserController {
 
   @Get(':id/feed')
   @UseGuards(AuthGuard, UserGuard)
-  async feed(@Param('id') id: string) {
-    const feed = await this.userService.getFeed(id);
+  async feed(
+    @Param('id') id: string,
+    @Query() queryParams?: PaginationQueryParams
+  ) {
+    const feed = await this.userService.getFeed(id, queryParams);
     return { data: feed };
   }
 
   @Get(':id/followers')
-  async getFollowers(@Param('id') id: string) {
-    const followers = await this.followService.getFollowers(id);
+  async getFollowers(
+    @Param('id') id: string,
+    @Query() queryParams?: PaginationQueryParams
+  ) {
+    const followers = await this.followService.getFollowers(id, queryParams);
     return { data: followers };
   }
 
   @Get(':id/followees')
-  async getFollowees(@Param('id') id: string) {
-    const followees = await this.followService.getFollowees(id);
+  async getFollowees(
+    @Param('id') id: string,
+    @Query() queryParams?: PaginationQueryParams
+  ) {
+    const followees = await this.followService.getFollowees(id, queryParams);
     return { data: followees };
   }
 
