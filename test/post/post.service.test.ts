@@ -13,12 +13,19 @@ describe('PostService', () => {
   let knex: Knex;
 
   const user = userFactory.build();
+  const otherUser = userFactory.build();
 
   const posts = postFactory
     .params({
       userId: user.id,
     })
     .buildList(4);
+
+  const otherPost = postFactory
+    .params({
+      userId: otherUser.id,
+    })
+    .build();
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -29,9 +36,9 @@ describe('PostService', () => {
     postService = module.get(PostService);
     knex = module.get(KNEX_CONNECTION);
 
-    await knex('users').insert(user);
+    await knex('users').insert([user, otherUser]);
 
-    await knex('posts').insert(posts);
+    await knex('posts').insert([...posts, otherPost]);
   });
 
   afterAll(async () => {
@@ -74,9 +81,45 @@ describe('PostService', () => {
         },
       }));
 
+      const otherPostShape = {
+        id: otherPost.id,
+        title: otherPost.title,
+        content: otherPost.content,
+        user: {
+          id: otherUser.id,
+          username: otherUser.username,
+        },
+      };
+
+      expect(result.sort((a, b) => a.id.localeCompare(b.id))).toMatchObject(
+        postShapes
+          .concat(otherPostShape)
+          .sort((a, b) => a.id.localeCompare(b.id))
+      );
+    });
+  });
+
+  describe('findAllByUser', () => {
+    it('should find and return all posts by user', async () => {
+      const result = await postService.findAllByUser(user.id);
+
+      const postShapes = posts.map((p) => ({
+        id: p.id,
+        title: p.title,
+        content: p.content,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+      }));
+
       expect(result.sort((a, b) => a.id.localeCompare(b.id))).toMatchObject(
         postShapes.sort((a, b) => a.id.localeCompare(b.id))
       );
+
+      const otherMatch = result.some((p) => p.id === otherPost.id);
+
+      expect(otherMatch).toBe(false);
     });
   });
 

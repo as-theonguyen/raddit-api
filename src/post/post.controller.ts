@@ -19,6 +19,20 @@ import { UpdatePostDTO } from '@src/post/dto/update-post.dto';
 import { PostGuard } from '@src/post/guards/post.guard';
 import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
+@Controller('users/:userId/posts')
+export class UserPostController {
+  constructor(private readonly postService: PostService) {}
+
+  @Get('')
+  async index(
+    @Param('userId') userId: string,
+    @Query() queryParams?: PaginationQueryParams
+  ) {
+    const posts = await this.postService.findAllByUser(userId, queryParams);
+    return { data: posts };
+  }
+}
+
 @Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}

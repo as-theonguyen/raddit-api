@@ -44,6 +44,28 @@ describe('PostController', () => {
     await app.close();
   });
 
+  describe('GET /api/users/:userId/posts', () => {
+    it('should return all posts by user', async () => {
+      const response = await request(app.getHttpServer()).get(
+        `/api/users/${user.id}/posts`
+      );
+
+      const postShapes = posts.map((p) => ({
+        id: p.id,
+        title: p.title,
+        content: p.content,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+      }));
+
+      expect(
+        response.body.data.sort((a, b) => a.id.localeCompare(b.id))
+      ).toMatchObject(postShapes.sort((a, b) => a.id.localeCompare(b.id)));
+    });
+  });
+
   describe('GET /api/posts', () => {
     it('should return all posts', async () => {
       const response = await request(app.getHttpServer()).get('/api/posts');

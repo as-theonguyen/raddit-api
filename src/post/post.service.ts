@@ -45,17 +45,36 @@ export class PostService {
     const offset = params?.offset || 0;
 
     const posts = await this.knex
-      .select([
-        'p.id',
-        'p.title',
-        'p.content',
-        'p.createdAt',
-        'u.id as uid',
-        'u.username',
-      ])
+      .select(['p.id', 'p.title', 'p.content', 'u.id as uid', 'u.username'])
       .from('posts as p')
       .join('users as u', 'u.id', '=', 'p.userId')
-      .orderBy('createdAt', 'desc')
+      .orderBy('p.createdAt', 'desc')
+      .limit(limit)
+      .offset(offset);
+
+    const ret = posts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      content: p.content,
+      user: {
+        id: p.uid,
+        username: p.username,
+      },
+    }));
+
+    return ret;
+  }
+
+  async findAllByUser(userId: string, params?: PaginationQueryParams) {
+    const limit = params?.limit || 20;
+    const offset = params?.offset || 0;
+
+    const posts = await this.knex
+      .select(['p.id', 'p.title', 'p.content', 'u.id as uid', 'u.username'])
+      .from('posts as p')
+      .join('users as u', 'u.id', '=', 'p.userId')
+      .where('p.userId', '=', userId)
+      .orderBy('p.createdAt', 'desc')
       .limit(limit)
       .offset(offset);
 
@@ -63,7 +82,6 @@ export class PostService {
       id: p.id,
       title: p.title,
       content: p.content,
-      createdAt: p.createdAt,
       user: {
         id: p.uid,
         username: p.username,
