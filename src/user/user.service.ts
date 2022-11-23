@@ -31,7 +31,6 @@ export class UserService {
       .join('users as u', 'u.id', '=', 'p.userId')
       .join('follows as f', 'u.id', '=', 'f.followeeId')
       .where('f.followerId', '=', id)
-      .orWhere('p.userId', '=', id)
       .orderBy('p.createdAt', 'desc')
       .limit(limit)
       .offset(offset);
@@ -45,6 +44,19 @@ export class UserService {
         username: p.username,
       },
     }));
+  }
+
+  async findAll(params?: PaginationQueryParams) {
+    const limit = params?.limit || 20;
+    const offset = params?.offset || 0;
+
+    const users = await this.knex('users')
+      .select(['id', 'email', 'username'])
+      .orderBy('createdAt', 'desc')
+      .limit(limit)
+      .offset(offset);
+
+    return users;
   }
 
   async findOne(id: string) {

@@ -59,6 +59,25 @@ describe('UserController', () => {
     await app.close();
   });
 
+  describe('GET /api/users', () => {
+    it('should return all users', async () => {
+      const response = await request(app.getHttpServer()).get('/api/users');
+
+      expect(response.body.data).toMatchObject([
+        {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        },
+        {
+          id: user2.id,
+          username: user2.username,
+          email: user2.email,
+        },
+      ]);
+    });
+  });
+
   describe('GET /api/users/me', () => {
     it('should return the current user', async () => {
       const response = await request(app.getHttpServer())

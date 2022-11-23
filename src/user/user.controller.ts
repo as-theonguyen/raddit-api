@@ -32,6 +32,12 @@ export class UserController {
     };
   }
 
+  @Get('')
+  async index(@Query() queryParams?: PaginationQueryParams) {
+    const allUsers = await this.userService.findAll(queryParams);
+    return { data: allUsers };
+  }
+
   @Get(':id/feed')
   @UseGuards(AuthGuard, UserGuard)
   async feed(

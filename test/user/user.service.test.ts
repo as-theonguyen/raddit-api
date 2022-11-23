@@ -78,6 +78,24 @@ describe('UserService', () => {
     });
   });
 
+  describe('findAll', () => {
+    it('should find and return all users', async () => {
+      const result = await userService.findAll();
+      expect(result).toMatchObject([
+        {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        },
+        {
+          id: followee.id,
+          email: followee.email,
+          username: followee.username,
+        },
+      ]);
+    });
+  });
+
   describe('findOne', () => {
     it('should find and return the user by the given params', async () => {
       const followerResult = await userService.findOne(user.id);
