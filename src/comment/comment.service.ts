@@ -4,24 +4,18 @@ import { v4 } from 'uuid';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
 import { CreateCommentDTO } from '@src/comment/dto/create-comment.dto';
 import { DeleteCommentDTO } from '@src/comment/dto/delete-comment.dto';
-import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Injectable()
 export class CommentService {
   constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
-  async findAllCommentsByPost(postId: string, params?: PaginationQueryParams) {
-    const limit = params?.limit || 10;
-    const offset = params?.offset || 0;
-
+  async findAllCommentsByPost(postId: string) {
     const comments = await this.knex
       .select(['c.id', 'c.content', 'u.id as uid', 'u.username'])
       .from('comments as c')
       .join('users as u', 'u.id', '=', 'c.userId')
       .where('c.postId', '=', postId)
-      .orderBy('c.createdAt', 'desc')
-      .limit(limit)
-      .offset(offset);
+      .orderBy('c.createdAt', 'desc');
 
     return comments.map((c) => ({
       id: c.id,

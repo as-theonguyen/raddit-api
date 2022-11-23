@@ -4,7 +4,6 @@ import { v4 } from 'uuid';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
 import { CreatePostDTO } from '@src/post/dto/create-post.dto';
 import { UpdatePostDTO } from '@src/post/dto/update-post.dto';
-import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Injectable()
 export class PostService {
@@ -40,17 +39,12 @@ export class PostService {
     };
   }
 
-  async findAll(params?: PaginationQueryParams) {
-    const limit = params?.limit || 20;
-    const offset = params?.offset || 0;
-
+  async findAll() {
     const posts = await this.knex
       .select(['p.id', 'p.title', 'p.content', 'u.id as uid', 'u.username'])
       .from('posts as p')
       .join('users as u', 'u.id', '=', 'p.userId')
-      .orderBy('p.createdAt', 'desc')
-      .limit(limit)
-      .offset(offset);
+      .orderBy('p.createdAt', 'desc');
 
     const ret = posts.map((p) => ({
       id: p.id,
@@ -65,18 +59,13 @@ export class PostService {
     return ret;
   }
 
-  async findAllByUser(userId: string, params?: PaginationQueryParams) {
-    const limit = params?.limit || 20;
-    const offset = params?.offset || 0;
-
+  async findAllByUser(userId: string) {
     const posts = await this.knex
       .select(['p.id', 'p.title', 'p.content', 'u.id as uid', 'u.username'])
       .from('posts as p')
       .join('users as u', 'u.id', '=', 'p.userId')
       .where('p.userId', '=', userId)
-      .orderBy('p.createdAt', 'desc')
-      .limit(limit)
-      .offset(offset);
+      .orderBy('p.createdAt', 'desc');
 
     return posts.map((p) => ({
       id: p.id,

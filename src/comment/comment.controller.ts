@@ -15,21 +15,14 @@ import { AuthGuard } from '@src/auth/guards/auth.guard';
 import { CommentService } from '@src/comment/comment.service';
 import { CommentGuard } from '@src/comment/guards/comment.guard';
 import { CreateCommentDTO } from '@src/comment/dto/create-comment.dto';
-import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Controller('posts/:postId/comments')
 export class PostCommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Get('')
-  async index(
-    @Param('postId') postId: string,
-    @Query() queryParams?: PaginationQueryParams
-  ) {
-    const comments = await this.commentService.findAllCommentsByPost(
-      postId,
-      queryParams
-    );
+  async index(@Param('postId') postId: string) {
+    const comments = await this.commentService.findAllCommentsByPost(postId);
     return { data: comments };
   }
 

@@ -17,18 +17,14 @@ import { AuthGuard } from '@src/auth/guards/auth.guard';
 import { CreatePostDTO } from '@src/post/dto/create-post.dto';
 import { UpdatePostDTO } from '@src/post/dto/update-post.dto';
 import { PostGuard } from '@src/post/guards/post.guard';
-import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Controller('users/:userId/posts')
 export class UserPostController {
   constructor(private readonly postService: PostService) {}
 
   @Get('')
-  async index(
-    @Param('userId') userId: string,
-    @Query() queryParams?: PaginationQueryParams
-  ) {
-    const posts = await this.postService.findAllByUser(userId, queryParams);
+  async index(@Param('userId') userId: string) {
+    const posts = await this.postService.findAllByUser(userId);
     return { data: posts };
   }
 }
@@ -38,8 +34,8 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get('')
-  async index(@Query() queryParams?: PaginationQueryParams) {
-    const posts = await this.postService.findAll(queryParams);
+  async index() {
+    const posts = await this.postService.findAll();
     return { data: posts };
   }
 

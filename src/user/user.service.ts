@@ -8,16 +8,12 @@ import { hash, verify } from 'argon2';
 import { Knex } from 'knex';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
 import { UpdateUserDTO } from '@src/user/dto/update-user.dto';
-import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Injectable()
 export class UserService {
   constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
-  async getFeed(id: string, params?: PaginationQueryParams) {
-    const limit = params?.limit || 20;
-    const offset = params?.offset || 0;
-
+  async getFeed(id: string) {
     const posts = await this.knex
       .select([
         'p.id',
@@ -31,9 +27,7 @@ export class UserService {
       .join('users as u', 'u.id', '=', 'p.userId')
       .join('follows as f', 'u.id', '=', 'f.followeeId')
       .where('f.followerId', '=', id)
-      .orderBy('p.createdAt', 'desc')
-      .limit(limit)
-      .offset(offset);
+      .orderBy('p.createdAt', 'desc');
 
     return posts.map((p) => ({
       id: p.id,
@@ -46,15 +40,10 @@ export class UserService {
     }));
   }
 
-  async findAll(params?: PaginationQueryParams) {
-    const limit = params?.limit || 20;
-    const offset = params?.offset || 0;
-
+  async findAll() {
     const users = await this.knex('users')
       .select(['id', 'email', 'username'])
-      .orderBy('createdAt', 'desc')
-      .limit(limit)
-      .offset(offset);
+      .orderBy('createdAt', 'desc');
 
     return users;
   }

@@ -16,7 +16,6 @@ import { UpdateUserDTO } from '@src/user/dto/update-user.dto';
 import { AuthGuard } from '@src/auth/guards/auth.guard';
 import { UserGuard } from '@src/user/guards/user.guard';
 import { FollowService } from '@src/follow/follow.service';
-import { PaginationQueryParams } from '@src/common/pagination-options.query';
 
 @Controller('users')
 export class UserController {
@@ -33,36 +32,27 @@ export class UserController {
   }
 
   @Get('')
-  async index(@Query() queryParams?: PaginationQueryParams) {
-    const allUsers = await this.userService.findAll(queryParams);
+  async index() {
+    const allUsers = await this.userService.findAll();
     return { data: allUsers };
   }
 
   @Get(':id/feed')
   @UseGuards(AuthGuard, UserGuard)
-  async feed(
-    @Param('id') id: string,
-    @Query() queryParams?: PaginationQueryParams
-  ) {
-    const feed = await this.userService.getFeed(id, queryParams);
+  async feed(@Param('id') id: string) {
+    const feed = await this.userService.getFeed(id);
     return { data: feed };
   }
 
   @Get(':id/followers')
-  async getFollowers(
-    @Param('id') id: string,
-    @Query() queryParams?: PaginationQueryParams
-  ) {
-    const followers = await this.followService.getFollowers(id, queryParams);
+  async getFollowers(@Param('id') id: string) {
+    const followers = await this.followService.getFollowers(id);
     return { data: followers };
   }
 
   @Get(':id/followees')
-  async getFollowees(
-    @Param('id') id: string,
-    @Query() queryParams?: PaginationQueryParams
-  ) {
-    const followees = await this.followService.getFollowees(id, queryParams);
+  async getFollowees(@Param('id') id: string) {
+    const followees = await this.followService.getFollowees(id);
     return { data: followees };
   }
 
