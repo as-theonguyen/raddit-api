@@ -5,6 +5,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "postbuild": "npm run db:migrate:prod",
     "db:migration:create": "npx knex migrate:make --knexfile=src/config/knexfile.ts -x ts",
     "db:migrate:dev": "npx knex migrate:latest --env=development --knexfile=src/config/knexfile.ts",
     "db:migrate:test": "npx knex migrate:latest --env=test --knexfile=src/config/knexfile.ts",
