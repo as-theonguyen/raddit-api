@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { v4 } from 'uuid';
 import { KNEX_CONNECTION } from '@src/knex/knex.module';
@@ -30,6 +30,10 @@ export class FollowService {
 
   async follow({ followeeId, followerId }: FollowDTO) {
     const id = v4();
+
+    if (followerId === followeeId) {
+      throw new BadRequestException('Cannot follow yourself');
+    }
 
     try {
       await this.knex('follows').insert({
