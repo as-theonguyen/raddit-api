@@ -2,6 +2,12 @@
 
 API for a social blogging application.
 
+Check out the frontend [here](https://github.com/ntson/raddit-web).
+
+The API is hosted on [Koyeb free tier](https://www.koyeb.com/pricing).
+
+The PostgreSQL database is hosted on [bit.io](https://bit.io/).
+
 ## Tech
 
 - Node
